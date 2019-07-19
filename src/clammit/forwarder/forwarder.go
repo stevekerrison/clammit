@@ -165,11 +165,12 @@ func (f *Forwarder) forwardRequest(req *http.Request, body io.Reader, contentLen
 	client, url := f.getClient(req)
 	freq, _ := http.NewRequest(req.Method, url.String(), body)
 	freq.ContentLength = contentLength
-	f.logger.Printf("Requested host: %s", req.Header.Get("Host"))
+	f.logger.Printf("Requested host: %s", req.Host)
+	freq.Host = req.Host
 	for key, val := range req.Header {
 		freq.Header[key] = val
-		f.logger.Printf("Copying header %s: %s", key, val)
 	}
+
 
 	// Be nice and add client IP to forwarding chain
 	if req.RemoteAddr != "@" {
